@@ -15,7 +15,7 @@ public class Person {
         this.engine = engine;
     }
 
-    public void getCar(){
+    public void call(){
         vehical.callName();
         engine.nameEngine();
     }
