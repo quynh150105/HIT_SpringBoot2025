@@ -1,14 +1,12 @@
 package org.spring.btvn_buoi2.Controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.spring.btvn_buoi2.Entity.Employee;
 import org.spring.btvn_buoi2.Service.EmployeeService;
-import org.spring.btvn_buoi2.Service.impl.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,29 +17,35 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @GetMapping("")
+    public String home(){
+        return "index";
+    }
+
+
     @GetMapping("/select")
-    public String getEmployee(Model model) {
-        List<Employee> list = employeeService.getEmployees();
-        model.addAttribute("employees", list);
-        return "employees";
+    public String select(Model model) {
+        List<Employee> employees = employeeService.getEmployees();
+        model.addAttribute("employees", employees);
+        return "employee-list";
     }
 
-    @GetMapping("/insert")
-    public String insertEmployee(@ModelAttribute Employee employee){
+    @PostMapping("/insert")
+    public String insert(@ModelAttribute Employee employee) {
         employeeService.createEmployee(employee);
-        return "redirect:/employees";
+        return "redirect:/employees/select";
     }
 
-    @GetMapping("/update")
-    public String updateEmployee(@ModelAttribute Employee employee){
+    @PostMapping("/update")
+    public String updateEmployee(@ModelAttribute Employee employee) {
         employeeService.updateEmployee(employee);
-        return "redirect:/employees";
+        return "redirect:/employees/select"; // Trở về danh sách sau khi cập nhật
     }
 
     @GetMapping("/delete")
-    public String deleteEmployee(@ModelAttribute Employee employee){
-        employeeService.deleteEmployee(employee.getId());
-        return "redirect:/employees";
+    public String deleteEmployee(@RequestParam("id") String id) {
+        employeeService.deleteEmployee(id);
+        return "redirect:/employees/select";
     }
 
 
